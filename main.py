@@ -19,6 +19,10 @@ Frames = typing.List[Frame]
 
 resolution = (45, 4)
 
+creative = True
+max_stack = 1_000
+current_hotbar_slot = 1
+
 video_file = "video.mp4"
 audio_file = "audio.mp3"
 screenshots_dir = "screenshots"
@@ -92,6 +96,8 @@ def get_line(frame_line: FrameLine) -> str:
     return line
 
 def start(frames: Frames):
+    global current_hotbar_slot
+
     if os.path.isdir(screenshots_dir):
         print("Deleting screenshots folder...")
         shutil.rmtree(screenshots_dir)
@@ -100,6 +106,7 @@ def start(frames: Frames):
     print("Starting!")
 
     average_time = []
+    current_stack_size = max_stack
 
     total_frames = len(frames)
     frame_padding = len(str(total_frames))
@@ -109,8 +116,17 @@ def start(frames: Frames):
         viewed_frame = frame_count + 1
 
         if frame_count > 0:
+            if current_stack_size <= 0:
+                current_stack_size = max_stack
+                current_hotbar_slot += 1
+                keyboard.press(str(current_hotbar_slot))
+                time.sleep(delay)
+
             # Break previous sign and wait for game to update
             mouse.click(mouse.LEFT)
+
+            if not creative:
+                current_stack_size -= 1
 
         # Place sign and wait for game to update
         mouse.click(mouse.RIGHT)
