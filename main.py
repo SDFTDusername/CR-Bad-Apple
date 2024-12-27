@@ -1,4 +1,5 @@
 import _thread
+import json
 import math
 import os
 import random
@@ -16,8 +17,7 @@ FrameLine = typing.List[int]
 Frame = typing.List[FrameLine]
 Frames = typing.List[Frame]
 
-colors = ("#", "[.", "+", "-", "*.", ". ", "  ")
-resolution = (15, 4)
+resolution = (45, 4)
 
 video_file = "video.mp4"
 audio_file = "audio.mp3"
@@ -28,6 +28,9 @@ start_keybind = "k"
 stop_keybind = 'j'
 
 delay = 0.1
+
+with open("characters.json") as file:
+    colors = tuple(json.load(file))
 
 colors_len = len(colors)
 fps = 0
@@ -90,19 +93,24 @@ def get_line(frame_line: FrameLine) -> str:
 
 def start(frames: Frames):
     if os.path.isdir(screenshots_dir):
+        print("Deleting screenshots folder...")
         shutil.rmtree(screenshots_dir)
     os.mkdir(screenshots_dir)
+
+    print("Starting!")
+
+    average_time = []
 
     total_frames = len(frames)
     frame_padding = len(str(total_frames))
 
     for frame_count in range(total_frames):
+        start_time = time.time()
         viewed_frame = frame_count + 1
 
         if frame_count > 0:
             # Break previous sign and wait for game to update
             mouse.click(mouse.LEFT)
-            time.sleep(delay)
 
         # Place sign and wait for game to update
         mouse.click(mouse.RIGHT)
@@ -128,12 +136,22 @@ def start(frames: Frames):
         with mss() as sct:
             sct.shot(output=f"{screenshots_dir}/frame_{viewed_frame_str}.png")
 
+        end_time = time.time()
+        total_time = end_time - start_time
+
+        if len(average_time) > 25:
+            average_time.pop(0)
+        average_time.append(total_time)
+
+        avg_time = sum(average_time) / len(average_time) * (total_frames - frame_count)
+        estimated_time = f"{pad_number(int(avg_time / 60 / 60), 2)}h, {pad_number(int(avg_time / 60) % 60, 2)}m, {pad_number(int(avg_time % 60), 2)}s"
+
         # Print progress
-        percentage = math.floor(viewed_frame / total_frames * 10_000) / 100
+        percentage = "{0:.2f}".format(math.floor(viewed_frame / total_frames * 10_000) / 100)
         if total_frames == 1:
-            print(f"{viewed_frame_str} out of {total_frames} frame is done. That is {percentage}% complete.")
+            print(f"{viewed_frame_str} out of {total_frames} frame is done. Estimated to be done in {estimated_time}. We are {percentage}% complete")
         else:
-            print(f"{viewed_frame_str} out of {total_frames} frames are done. That is {percentage}% complete.")
+            print(f"{viewed_frame_str} out of {total_frames} frames are done. Estimated to be done in {estimated_time}. We are {percentage}% complete")
 
     print("Saving to video...")
 
@@ -154,7 +172,7 @@ def main():
     if fail:
         return
 
-    print("Loading video...")
+    print("Loading video into memory...")
     frames = get_frames(video_file)
 
     print(f"To stop the program while it's running, press the '{stop_keybind}' key.")
