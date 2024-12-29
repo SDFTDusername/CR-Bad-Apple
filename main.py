@@ -101,6 +101,8 @@ def get_line(frame_line: FrameLine, y: int) -> str:
 def start(frames: Frames):
     global current_hotbar_slot
 
+    sct = mss()
+
     if os.path.isdir(screenshots_dir):
         print("Deleting screenshots folder...")
         shutil.rmtree(screenshots_dir)
@@ -129,6 +131,10 @@ def start(frames: Frames):
 
             if not creative:
                 current_stack_size -= 1
+
+        if sct.grab({"mon": 1, "left": 795, "top": 475, "width": 1, "height": 1}).pixel(0, 0) == (53, 61, 61):
+            keyboard.send("esc")
+            time.sleep(delay * 2)
 
         # Place sign and wait for game to update
         mouse.click(mouse.RIGHT)
@@ -166,14 +172,17 @@ def start(frames: Frames):
 
         # Exit screen and wait for game to update
         keyboard.send("esc")
-        time.sleep(delay)
+        time.sleep(delay * 2)
+
+        if sct.grab({"mon": 1, "left": 795, "top": 475, "width": 1, "height": 1}).pixel(0, 0) == (53, 61, 61):
+            keyboard.send("esc")
+            time.sleep(delay * 2)
 
         # Convert frame count to string
         viewed_frame_str = pad_number(viewed_frame, frame_padding)
 
         # Take a screenshot and save
-        with mss() as sct:
-            sct.shot(output=f"{screenshots_dir}/frame_{viewed_frame_str}.png")
+        sct.shot(output=f"{screenshots_dir}/frame_{viewed_frame_str}.png")
 
         end_time = time.time()
         total_time = end_time - start_time
