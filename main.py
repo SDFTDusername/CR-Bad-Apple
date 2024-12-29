@@ -17,11 +17,12 @@ FrameLine = typing.List[int]
 Frame = typing.List[FrameLine]
 Frames = typing.List[Frame]
 
-resolution = (45, 4)
+resolution = (36, 5)
 
 creative = True
 max_stack = 1_000
 current_hotbar_slot = 1
+empty_hotbar_slot = 0
 
 video_file = "video.mp4"
 audio_file = "audio.mp3"
@@ -31,7 +32,7 @@ output_file = "output.mp4"
 start_keybind = "k"
 stop_keybind = 'j'
 
-delay = 0.1
+delay = 0.05
 
 with open("characters.json") as file:
     colors = tuple(json.load(file))
@@ -89,11 +90,13 @@ def random_frame() -> Frame:
         frame.append(line)
     return frame
 
-def get_line(frame_line: FrameLine) -> str:
+def get_line(frame_line: FrameLine, y: int) -> str:
     line = ""
     for x in range(resolution[0]):
+        if y == 4 and (x in range(0, 2) or x in range(34, 36)):
+            continue
         line += get_color(frame_line[x])
-    return line
+    return line + "\n"
 
 def start(frames: Frames):
     global current_hotbar_slot
@@ -119,11 +122,10 @@ def start(frames: Frames):
             if current_stack_size <= 0:
                 current_stack_size = max_stack
                 current_hotbar_slot += 1
-                keyboard.press(str(current_hotbar_slot))
-                time.sleep(delay)
 
             # Break previous sign and wait for game to update
             mouse.click(mouse.LEFT)
+            time.sleep(delay)
 
             if not creative:
                 current_stack_size -= 1
@@ -132,17 +134,38 @@ def start(frames: Frames):
         mouse.click(mouse.RIGHT)
         time.sleep(delay)
 
+        mouse.click(mouse.RIGHT)
+        time.sleep(delay)
+
+        mouse.move(613, 546)
+        time.sleep(delay)
+
+        mouse.click(mouse.LEFT)
+        time.sleep(delay)
+
+        mouse.move(962, 528)
+        time.sleep(delay)
+
+        mouse.click(mouse.LEFT)
+        time.sleep(delay)
+
+        mouse.move(713, 508)
+        time.sleep(delay)
+
+        mouse.click(mouse.LEFT)
+        time.sleep(delay)
+
         # Get frame
         frame = frames[frame_count]
 
         # Type frame
+        final_text = ""
         for y in range(resolution[1]):
-            keyboard.write(get_line(frame[y]))
-            if y < resolution[1] - 1:
-                keyboard.press("enter")
+            final_text += get_line(frame[y], y)
+        keyboard.write(final_text)
 
         # Exit screen and wait for game to update
-        keyboard.press("esc")
+        keyboard.send("esc")
         time.sleep(delay)
 
         # Convert frame count to string

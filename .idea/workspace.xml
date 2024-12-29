@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5dc9b02-3b19-4acf-87ae-eabe4b9da2aa" name="Changes" comment="Basic implementation">
+    <list default="true" id="c5dc9b02-3b19-4acf-87ae-eabe4b9da2aa" name="Changes" comment="Added support for survival">
       <change afterPath="$PROJECT_DIR$/audio.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/characters.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/video.mp4" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/characters.json" beforeDir="false" afterPath="$PROJECT_DIR$/characters.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -107,11 +107,29 @@
       <option name="project" value="LOCAL" />
       <updated>1735244182176</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added some improvements">
+      <option name="closed" value="true" />
+      <created>1735308538345</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1735308538345</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added support for survival">
+      <option name="closed" value="true" />
+      <created>1735309398431</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1735309398432</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Basic implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Basic implementation" />
+    <MESSAGE value="Added some improvements" />
+    <MESSAGE value="Added support for survival" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for survival" />
   </component>
 </project>
